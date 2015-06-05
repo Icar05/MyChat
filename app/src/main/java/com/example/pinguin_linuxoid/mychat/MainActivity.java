@@ -40,6 +40,7 @@ public class MainActivity extends Activity {
 
     public void onClick(View view)
     {
+        String temp;
         name = getName.getText().toString();
         passwd = getPass.getText().toString();
         if(name.isEmpty() || passwd.isEmpty())
@@ -55,13 +56,11 @@ public class MainActivity extends Activity {
                                           sd.execute();
 
                                           try {
-                                              String temp = sd.get().toString();
+                                              temp = sd.get().toString();
                                               if (temp.equals("OK")) {
                                                   Intent intent = new Intent(this, Enter.class);
                                                   intent.putExtra("name", name);
                                                   startActivity(intent);
-                                              } else {
-                                                  Toast.makeText(this, "Wrong user! ", Toast.LENGTH_LONG).show();
                                               }
                                           }
                                                   catch(InterruptedException e) {
