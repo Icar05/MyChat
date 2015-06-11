@@ -1,0 +1,67 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Здесь Ви можете найти ваших друзей"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:textColor="#00ff00"
+        android:id="@+id/title_Add_friends" />
+
+
+    <ListView
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:divider="@color/blackdivider"
+        android:dividerHeight="@dimen/twodp"
+        android:id="@+id/lv_Add_friends">
+    </ListView>
+
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Добавить"
+        android:onClick="onClick_F"
+        android:id="@+id/btn_Add_friends" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Назад"
+        android:onClick="onClick_F"
+        android:id="@+id/btn_Home" />
+
+</LinearLayout>
+
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Здесь Ви можете найти ваших друзей"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:id="@+id/title_Add_friends_result" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_gravity="center_horizontal" />
+
+</LinearLayout>
+
+
