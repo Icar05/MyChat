@@ -1,18 +1,16 @@
 package com.example.pinguin_linuxoid.mychat;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 
@@ -21,15 +19,12 @@ public class Find_friends extends Activity {
     Send_data sd;
     TextView title_result;
     ListView lv_Add_friends;
-    ArrayList<Map<String, Object>> all_users;
     String[] contact = {""};
-    Button btn_Add;
-    int[] to = {R.id.temp_message};
-    final String ATTRIBUTE_NAME_TEXT = "text";
-    String[] from = {ATTRIBUTE_NAME_TEXT};
-    String data, friend, username = null;
+    Button btn_Add, btn_Home;
+    String data, friend, username, temp = null;
     ProgressBar pb;
     final String PARSER = "`";
+    final String NAME = "name";
 
 
 
@@ -43,16 +38,17 @@ public class Find_friends extends Activity {
         pb = (ProgressBar) findViewById(R.id.progressBar);
         lv_Add_friends = (ListView) findViewById(R.id.lv_Add_friends);
         btn_Add = (Button)findViewById(R.id.btn_Add_friends);
+        btn_Home = (Button)findViewById(R.id.btn_Home);
 
-        username =getIntent().getStringExtra("name");
+        username =getIntent().getStringExtra(NAME);
+
         data = "names" + PARSER + username + PARSER + "@";
         sd = new Send_data(data);
         sd.execute();
 
 
         try {
-            String temp = sd.get().toString();
-
+            temp = sd.get().toString();
 
             if(temp.equals("Unknown host") || temp.equals("No connecting to internet! "))
             {
@@ -64,25 +60,17 @@ public class Find_friends extends Activity {
 
                 contact = temp.split(PARSER);
 
-                all_users = new ArrayList<>(contact.length);
-                Map<String, Object> m_f;
+                ArrayAdapter<String> aa = new ArrayAdapter<String>(this, R.layout.test, contact);
+                lv_Add_friends.setAdapter(aa);
+                lv_Add_friends.setBackgroundColor(Color.WHITE);
 
-                for (int i = 0; i < contact.length; i++) {
-                    m_f = new HashMap<String, Object>();
-                    m_f.put(ATTRIBUTE_NAME_TEXT, contact[i]);
-                    all_users.add(m_f);
-                }
 
-                SimpleAdapter sFriends = new SimpleAdapter(this, all_users, R.layout.temp, from, to);
-                lv_Add_friends.setAdapter(sFriends);
-                lv_Add_friends.setBackgroundColor(Color.RED);
                 lv_Add_friends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                         friend = contact[position];
-                        title_result.setText(friend);
+                        title_result.setText(friend+" are choised");
                         title_result.setTextColor(Color.WHITE);
                     }
                 });
@@ -106,8 +94,33 @@ public class Find_friends extends Activity {
         switch (v.getId())
         {
 
-            case R.id.btn_Add_friends :           title_result.setText("Click Click");
-                                                  title_result.setTextColor(Color.RED);
+            case R.id.btn_Add_friends :           if(friend == null)
+                                                     title_result.setText("Сначала выберите пользователя из списка!");
+
+                                                else {
+                                                   data = "add_Friend" + PARSER + username + PARSER + friend + PARSER;
+                                                   sd = new Send_data(data);
+                                                    sd.execute();
+
+                                                   try {
+                                                           temp = sd.get().toString();
+                                                           title_result.setText(temp);
+                                                           title_result.setTextColor(Color.WHITE);
+                                                        } catch (InterruptedException e) {
+                                                             e.fillInStackTrace();
+                                                        } catch (ExecutionException e) {
+                                                             e.fillInStackTrace();
+                                                        } finally {
+                                                        sd.isCancelled();
+                                                          }
+                                                  }
+                                                  break;
+
+
+            case R.id.btn_Home        :           Intent intent = new Intent();
+                                                  setResult(RESULT_OK, intent);
+                                                  finish();
+
                                                   break;
             default: break;
         }

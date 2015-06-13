@@ -3,46 +3,48 @@ package com.example.pinguin_linuxoid.mychat;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 
 public class Enter extends Activity{
 
-    ArrayList<Map<String, Object>> data_messages;
-    ArrayList<Map<String, Object>> data_contacts;
 
+    final String NAME = "name";
+    final String PARSER = "`";
 
-    final String ATTRIBUTE_NAME_TEXT = "text";
-    TextView reciever_name;
-    TextView label;
+    TextView label, tvNotif;
 
-    Button send;
-    ListView contacts;
-    ListView messages;
+    ListView lv_contacts;
+    ListView lv_messages;
 
-    String[] contact = {"Panda", "Chapaye", "JJ", "Icar"};
+    String[] contact = {"Panda", "Chapaye", "JJ", "Icar", "Ivan", "Leska", "Someone else"};
     String[] message = {"Привет", "бла бла бла", "something else"};
-    String reciever = "";
-    BroadcastReceiver br;
 
-
-    int[] to = {R.id.temp_message};
-    int[] to2 = {R.id.Cont};
-
-    String[] from = {ATTRIBUTE_NAME_TEXT};
+    String username , data = null;
+    String reciever = "";         //ето имя втбрпного контакта
+    LinearLayout LL;
 
     EditText mBox;
+    Send_data sd;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,56 +52,64 @@ public class Enter extends Activity{
         setContentView(R.layout.enter);
 
 
-        label = (TextView)findViewById(R.id.Label);
+        username =getIntent().getStringExtra(NAME);
 
-        String temp =getIntent().getStringExtra("name");
-        label.setText("Hello, "+temp+ " !");
+        tvNotif = (TextView)findViewById(R.id.tvNotif);
+        label = (TextView)findViewById(R.id.Label);      /// Приветствие поциента
+        label.setText("Wellcome, " + username + " !");
 
-        contacts = (ListView) findViewById(R.id.Contacts);
-        messages = (ListView) findViewById(R.id.Messages);
-        contacts.setBackgroundColor(Color.MAGENTA);
-        messages.setBackgroundColor(Color.GREEN);
-        send = (Button) findViewById(R.id.Send);
+        LL = (LinearLayout)findViewById(R.id.LL);
+        LL.setVisibility(View.INVISIBLE);
+
+
+        data = "notification" + PARSER + username + PARSER + "@";
+        sd = new Send_data(data);
+        sd.execute();
+
+
+        try {
+            String temp = sd.get().toString();
+
+            if(!temp.equals(""))
+            {
+                LL.setVisibility(View.VISIBLE);
+                tvNotif.setText("Вас хочет добавить "+temp);
+            }
+
+
+        } catch (InterruptedException e) {
+          e.fillInStackTrace();
+        } catch (ExecutionException e) {
+           e.fillInStackTrace();
+        } finally {
+            sd.isCancelled();
+        }
+
+
+        lv_contacts = (ListView) findViewById(R.id.Contacts);
+        lv_messages = (ListView) findViewById(R.id.Messages);
+        lv_contacts.setBackgroundColor(Color.WHITE);
+        lv_messages.setBackgroundColor(Color.GREEN);
+
+
         mBox = (EditText) findViewById(R.id.MesBox);
-        reciever_name = (TextView)findViewById(R.id.reciever_name);
-
-        data_messages = new ArrayList<>(message.length);
-        data_contacts = new ArrayList<>(contact.length);
 
 
-
-        Map<String, Object> m_c;
-        Map<String, Object> m_m;
-
-        for (int i = 0; i < message.length; i++) {
-            m_c = new HashMap<String, Object>();
-            m_c.put(ATTRIBUTE_NAME_TEXT, message[i]);
-            data_messages.add(m_c);
-        }
-
-        for (int i = 0; i < contact.length; i++)
-        {
-            m_m = new HashMap<String, Object>();
-            m_m.put(ATTRIBUTE_NAME_TEXT, contact[i]);
-            data_contacts.add(m_m);
-        }
+        ArrayAdapter<String> aM = new ArrayAdapter<String>(this, R.layout.test, message);
+        ArrayAdapter<String> aC = new ArrayAdapter<String>(this, R.layout.test, contact);
 
 
-        SimpleAdapter sMessages = new SimpleAdapter(this, data_messages, R.layout.temp, from, to);
-        SimpleAdapter sContacts = new SimpleAdapter(this, data_contacts, R.layout.temp, from, to);
+        lv_contacts.setAdapter(aC);
+        lv_messages.setAdapter(aM);
 
-        messages.setAdapter(sMessages);
-        contacts.setAdapter(sContacts);
 
-        contacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        lv_contacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                reciever = contact[position];
-                view.setBackgroundColor(Color.MAGENTA);
-                reciever_name.setText("Message from " + reciever);
-                reciever_name.setBackgroundColor(Color.GREEN);
+                reciever = contact[position];// имя вибраного
             }
         });
 
@@ -108,29 +118,46 @@ public class Enter extends Activity{
     }
 
 
-    @Override
-    protected void onDestroy() {
-        super .onDestroy();
-
-        unregisterReceiver(br);
-    }
-
 
     public void onClick(View v)
     {
         switch (v.getId())
         {
-            case R.id.Send :            //Сделать базу которая получает и
-                //разворачивает putExtra
-                //Добавляет сообщение и отравляет обратно
-                break;
 
 
-            case R.id.find_user3:          //Искать по таблицам бд
-                break;
+            case R.id.find_user3:        Intent intent = new Intent(this, Find_friends.class);
+                                         intent.putExtra(NAME, username);
+                                         startActivityForResult(intent, 1);
+                                         break;
+
+            case R.id.Send :             Toast.makeText(this, "i sending message)", Toast.LENGTH_SHORT).show();
+                                         break;
+
+
+            case R.id.btnYes:            Toast.makeText(this, "You say yes!", Toast.LENGTH_SHORT).show();
+                                         /*
+                                         data = "Add_Yes" + PARSER + username + PARSER + "@";
+                                         sd = new Send_data(data);
+                                         sd.execute();
+                                         LL.setVisibility(View.INVISIBLE);
+                                         */
+                                         break;
+
+            case R.id.btnNo :            Toast.makeText(this,"I say no!", Toast.LENGTH_SHORT).show();
+                                         /*
+                                         data = "Add_No" + PARSER + username + PARSER + "@";
+                                         sd = new Send_data(data);
+                                         sd.execute();
+                                         LL.setVisibility(View.INVISIBLE);
+                                         */
+                                         break;
+
             default:
-                break;
+                                         break;
         }
+
+
+
     }
 
 }

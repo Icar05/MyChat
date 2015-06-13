@@ -40,7 +40,9 @@ public class MainActivity extends Activity {
 
     public void onClick(View view)
     {
+
         String temp;
+
         name = getName.getText().toString();
         passwd = getPass.getText().toString();
         if(name.isEmpty() || passwd.isEmpty())
@@ -48,6 +50,7 @@ public class MainActivity extends Activity {
             Toast.makeText(this, "Запопните все поля!", Toast.LENGTH_SHORT).show();
             return;
         }
+
 
         switch (view.getId())
         {
@@ -70,6 +73,8 @@ public class MainActivity extends Activity {
                                                         e.fillInStackTrace();
                                                          }
                                                     sd.isCancelled();
+
+
                                                     break;
 
 

@@ -22,6 +22,10 @@ public  class Send_data extends AsyncTask<Void, Void, String> {
         input = _input;
         view = _view;
     }
+    public Send_data(String _input)
+    {
+        input = _input;
+    }
 
     @Override
     protected void onPreExecute() {
@@ -60,7 +64,9 @@ public  class Send_data extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        view.setText(result);
+        if(view != null)
+            view.setText(result);
+
         super.onPostExecute(result);
     }
 }
