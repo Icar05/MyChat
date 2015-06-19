@@ -51,7 +51,6 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Здесь Ви можете найти ваших друзей"
         android:textSize="20dp"
         android:gravity="center"
         android:id="@+id/title_Add_friends_result" />

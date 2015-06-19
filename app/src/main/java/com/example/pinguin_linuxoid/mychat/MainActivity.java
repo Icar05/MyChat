@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
 
                                           try {
                                               temp = sd.get().toString();
-                                              if (temp.equals("OK")) {
+                                              if (temp.equals("Wellcome!")) {
                                                   Intent intent = new Intent(this, Enter.class);
                                                   intent.putExtra("name", name);
                                                   startActivity(intent);

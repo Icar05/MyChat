@@ -2,24 +2,16 @@ package com.example.pinguin_linuxoid.mychat;
 
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 
@@ -29,21 +21,22 @@ public class Enter extends Activity{
     final String NAME = "name";
     final String PARSER = "`";
 
-    TextView label, tvNotif;
+    TextView label, tvNotif, tempView;
 
     ListView lv_contacts;
     ListView lv_messages;
 
-    String[] contact = {"Panda", "Chapaye", "JJ", "Icar", "Ivan", "Leska", "Someone else"};
-    String[] message = {"Привет", "бла бла бла", "something else"};
+    String[] contact = {""};
+    String[] message = {"Message1", "Message2", "Message3", "Message4"};
 
-    String username , data = null;
-    String reciever = "";         //ето имя втбрпного контакта
+    String username ,temp,temp2,data = null;
+    String reciever = null;         //ето имя втбрпного контакта
     LinearLayout LL;
 
     EditText mBox;
     Send_data sd;
 
+    ArrayAdapter<String> aC;
 
 
     @Override
@@ -55,11 +48,17 @@ public class Enter extends Activity{
         username =getIntent().getStringExtra(NAME);
 
         tvNotif = (TextView)findViewById(R.id.tvNotif);
+        tempView = (TextView)findViewById(R.id.tempView);
         label = (TextView)findViewById(R.id.Label);      /// Приветствие поциента
         label.setText("Wellcome, " + username + " !");
 
         LL = (LinearLayout)findViewById(R.id.LL);
         LL.setVisibility(View.INVISIBLE);
+
+        mBox = (EditText) findViewById(R.id.MesBox);
+
+        lv_contacts = (ListView) findViewById(R.id.Contacts);
+
 
 
         data = "notification" + PARSER + username + PARSER + "@";
@@ -68,7 +67,7 @@ public class Enter extends Activity{
 
 
         try {
-            String temp = sd.get().toString();
+            temp = sd.get().toString();
 
             if(!temp.equals(""))
             {
@@ -85,35 +84,12 @@ public class Enter extends Activity{
             sd.isCancelled();
         }
 
+        Update_Adaptor();
 
-        lv_contacts = (ListView) findViewById(R.id.Contacts);
+
         lv_messages = (ListView) findViewById(R.id.Messages);
-        lv_contacts.setBackgroundColor(Color.WHITE);
-        lv_messages.setBackgroundColor(Color.GREEN);
-
-
-        mBox = (EditText) findViewById(R.id.MesBox);
-
-
         ArrayAdapter<String> aM = new ArrayAdapter<String>(this, R.layout.test, message);
-        ArrayAdapter<String> aC = new ArrayAdapter<String>(this, R.layout.test, contact);
-
-
-        lv_contacts.setAdapter(aC);
         lv_messages.setAdapter(aM);
-
-
-
-        lv_contacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                reciever = contact[position];// имя вибраного
-            }
-        });
-
-
 
     }
 
@@ -134,30 +110,70 @@ public class Enter extends Activity{
                                          break;
 
 
-            case R.id.btnYes:            Toast.makeText(this, "You say yes!", Toast.LENGTH_SHORT).show();
-                                         /*
-                                         data = "Add_Yes" + PARSER + username + PARSER + "@";
+            case R.id.btnYes:            data = "Add_Yes" + PARSER + username + PARSER + temp;
                                          sd = new Send_data(data);
                                          sd.execute();
                                          LL.setVisibility(View.INVISIBLE);
-                                         */
+                                         Update_Adaptor();
+
                                          break;
 
-            case R.id.btnNo :            Toast.makeText(this,"I say no!", Toast.LENGTH_SHORT).show();
-                                         /*
-                                         data = "Add_No" + PARSER + username + PARSER + "@";
-                                         sd = new Send_data(data);
-                                         sd.execute();
-                                         LL.setVisibility(View.INVISIBLE);
-                                         */
-                                         break;
+
+            case R.id.btnNo :             data = "Add_No" + PARSER + username + PARSER + temp;
+                                          sd = new Send_data(data);
+                                          sd.execute();
+                                          LL.setVisibility(View.INVISIBLE);
+                                          break;
+
+            case R.id.Drop :              if(reciever == null)
+                                          {
+                                              tempView.setText("Сначала выберите контакт!");
+                                              break;
+                                          }
+
+                                          data = "Drop_Contact" + PARSER + username + PARSER + reciever;
+                                          sd = new Send_data(data);
+                                          sd.execute();
+
+                                          Update_Adaptor();
+                                          break;
 
             default:
                                          break;
         }
+    }
 
 
+    public void Update_Adaptor()
+    {
+        temp2 = null;
+        data = "get_Friends" + PARSER + username + PARSER + "@";
+        sd = new Send_data(data);
+        sd.execute();
 
+
+        try {
+            temp2 = sd.get().toString();
+            contact = temp2.split(PARSER);
+
+            aC = new ArrayAdapter<String>(this, R.layout.test, contact);
+            lv_contacts.setAdapter(aC);
+            lv_contacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    reciever = contact[position];// имя вибраного
+                    tempView.setText("Выбран "+reciever);
+                }
+            });
+
+        } catch (InterruptedException e) {
+            e.fillInStackTrace();
+        } catch (ExecutionException e) {
+            e.fillInStackTrace();
+        } finally {
+            sd.isCancelled();
+        }
     }
 
 }

@@ -10,6 +10,7 @@
         android:text="Hello, username!"
         android:textSize="20dp"
         android:gravity="center"
+        android:textColor="#000000"
         android:id="@+id/Label"
         android:background="@color/background_floating_material_light" />
 
@@ -35,6 +36,47 @@
             android:id="@+id/reciever_name"
             android:layout_weight="5"/>
 
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="40dp"
+            android:id="@+id/LL">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#AA00DE"
+                    android:id="@+id/tvNotif" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_width="80dp"
+                    android:layout_height="35dp"
+                    android:text="Yes"
+                    android:onClick="onClick"
+                    android:id="@+id/btnYes" />
+
+                <Button
+                    android:layout_width="80dp"
+                    android:layout_height="35dp"
+                    android:onClick="onClick"
+                    android:text="No"
+                    android:id="@+id/btnNo" />
+            </LinearLayout>
+
+        </LinearLayout>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,7 +99,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ваши контакти"
+                android:text="Контакты"
+                android:textColor="#00ff00"
                 android:id="@+id/ContactTv" />
 
             <ListView
@@ -65,10 +108,19 @@
                 android:layout_height="100dp"
                 android:divider="@color/blackdivider"
                 android:dividerHeight="@dimen/twodp"
+                android:layout_marginRight="20dp"
+                android:background="#ffffff"
                 android:id="@+id/Contacts">
             </ListView>
 
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/Drop"
+                android:text="Удалить"
+                android:clickable="true"
+                android:onClick="onClick" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -78,8 +130,6 @@
                 android:onClick="onClick"
                 android:id="@+id/find_user3" />
 
-
-
         </LinearLayout>
 
         <LinearLayout
@@ -87,9 +137,12 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1">
+
             <ListView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="#ff0fa922"
                 android:id="@+id/Messages">
             </ListView>
 
@@ -107,6 +160,12 @@
                 android:text="Send"
                 android:clickable="true"
                 android:onClick="onClick" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#fffc51"
+                android:id="@+id/tempView"/>
 
         </LinearLayout>
     </LinearLayout>
