@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import java.util.concurrent.ExecutionException;
 
 
@@ -28,9 +27,9 @@ public class Enter extends Activity{
     ListView lv_messages;
 
     String[] contact = {""};
-    String[] message = {"Message1", "Message2", "Message3", "Message4"};
+    String[] message = {""};
 
-    String username ,temp,temp2,data = null;
+    String username ,temp,temp2,temp3,data = null;
     String reciever = null;         //ето имя втбрпного контакта
     LinearLayout LL;
 
@@ -38,6 +37,7 @@ public class Enter extends Activity{
     Send_data sd;
 
     ArrayAdapter<String> aC;
+    MyAdapter myAdapter;
 
 
     @Override
@@ -60,6 +60,8 @@ public class Enter extends Activity{
         mBox = (EditText) findViewById(R.id.MesBox);
 
         lv_contacts = (ListView) findViewById(R.id.Contacts);
+        lv_messages = (ListView) findViewById(R.id.Messages);
+        lv_messages.setVisibility(View.INVISIBLE);
 
         data = "notification" + PARSER + username + PARSER + "@";
         sd = new Send_data(data);
@@ -85,12 +87,6 @@ public class Enter extends Activity{
         }
 
         Update_Adaptor();
-
-
-        lv_messages = (ListView) findViewById(R.id.Messages);
-        ArrayAdapter<String> aM = new ArrayAdapter<String>(this, R.layout.test, message);
-        lv_messages.setAdapter(aM);
-
     }
 
 
@@ -101,12 +97,31 @@ public class Enter extends Activity{
         {
 
 
-            case R.id.Add:        Intent intent = new Intent(this, Find_friends.class);
+            case R.id.Add:               Intent intent = new Intent(this, Find_friends.class);
                                          intent.putExtra(NAME, username);
                                          startActivityForResult(intent, 1);
                                          break;
 
-            case R.id.Send :             Toast.makeText(this, "i sending message)", Toast.LENGTH_SHORT).show();
+
+            case R.id.Send :             String message = mBox.getText().toString();
+                                         if(message.equals(""))
+                                         {
+                                             tempView.setText("Нету сообщения!");
+                                             tempView.setTextColor(Color.RED);
+                                             break;
+                                         }
+                                         if(reciever == null)
+                                         {
+                                              tempView.setText("Сначала выберите контакт!");
+                                              tempView.setTextColor(Color.RED);
+                                              break;
+                                         }
+
+                                         data = "Message" + PARSER + username + PARSER + reciever+PARSER+message;
+                                         sd = new Send_data(data);
+                                         sd.execute();
+                                         Update_Message_Adaptor();
+                                         tempView.setText("");
                                          break;
 
 
@@ -130,7 +145,6 @@ public class Enter extends Activity{
                                               tempView.setText("Сначала выберите контакт!");
                                               break;
                                           }
-
                                           data = "Drop_Contact" + PARSER + username + PARSER + reciever;
                                           sd = new Send_data(data);
                                           sd.execute();
@@ -138,8 +152,7 @@ public class Enter extends Activity{
                                           Update_Adaptor();
                                           break;
 
-            default:
-                                         break;
+            default:                      break;
         }
     }
 
@@ -179,9 +192,54 @@ public class Enter extends Activity{
                             view.setBackgroundColor(Color.RED);
 
 
+                            Update_Message_Adaptor();
+                    }
+                });
+            }
+
+        } catch (InterruptedException e) {
+            e.fillInStackTrace();
+        } catch (ExecutionException e) {
+            e.fillInStackTrace();
+        } finally {
+            sd.isCancelled();
+        }
+    }
+
+
+    public void Update_Message_Adaptor()
+    {
+        temp3 = null;
+        data = "get_Messages" + PARSER + username + PARSER + reciever;
+        sd = new Send_data(data);
+        sd.execute();
+
+
+        try {
+
+
+            temp3 = sd.get().toString();
+            if(temp3.equals("Unknown host") || temp3.equals("No connecting to internet! "))
+            {
+                tempView.setText(temp3);
+                tempView.setTextColor(Color.RED);
+            }
+
+            else {
+                message = temp3.split(PARSER);
+
+                myAdapter = new MyAdapter(this, message);
+                lv_messages.setAdapter(myAdapter);
+                lv_messages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                        view.setBackgroundColor(Color.YELLOW);
 
                     }
                 });
+                lv_messages.setVisibility(View.VISIBLE);
             }
 
         } catch (InterruptedException e) {
