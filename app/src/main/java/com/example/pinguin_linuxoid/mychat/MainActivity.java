@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.concurrent.ExecutionException;
@@ -13,7 +14,7 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends Activity {
 
-    TextView panda, request;
+    TextView  request;
     EditText getName, getPass;
     String name, passwd, data;
     final String PARSER = "`";
@@ -26,13 +27,10 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        panda =   (TextView)findViewById(R.id.Panda);///
+
         request = (TextView)findViewById(R.id.request);
         getName = (EditText)findViewById(R.id.getName);
         getPass = (EditText)findViewById(R.id.getPass);
-        panda.setText("This is nice panda skype!");
-        panda.setTextColor(Color.GREEN);
-
     }
 
 
@@ -47,7 +45,7 @@ public class MainActivity extends Activity {
         passwd = getPass.getText().toString();
         if(name.isEmpty() || passwd.isEmpty())
         {
-            Toast.makeText(this, "Запопните все поля!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Заполните все поля!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -71,8 +69,10 @@ public class MainActivity extends Activity {
                                                      }
                                                   catch (ExecutionException e) {
                                                         e.fillInStackTrace();
-                                                         }
-                                                    sd.isCancelled();
+                                                         }finally {
+                                              sd.isCancelled();
+                                          }
+
 
 
                                                     break;

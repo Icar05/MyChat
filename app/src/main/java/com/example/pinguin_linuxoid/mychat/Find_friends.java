@@ -53,6 +53,7 @@ public class Find_friends extends Activity {
             if(temp.equals("Unknown host") || temp.equals("No connecting to internet! "))
             {
                 title_result.setText(temp);
+                title_result.setTextColor(Color.RED);
                 btn_Add.setEnabled(false);
             }
 
@@ -60,7 +61,7 @@ public class Find_friends extends Activity {
 
                 contact = temp.split(PARSER);
 
-                ArrayAdapter<String> aa = new ArrayAdapter<String>(this, R.layout.test, contact);
+                ArrayAdapter<String> aa = new ArrayAdapter<String>(this, R.layout.add_friends_item, contact);
                 lv_Add_friends.setAdapter(aa);
                 lv_Add_friends.setBackgroundColor(Color.WHITE);
 
@@ -70,8 +71,11 @@ public class Find_friends extends Activity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         friend = contact[position];
-                        title_result.setText(friend+" are choised");
-                        title_result.setTextColor(Color.WHITE);
+
+                        for(int i = 0; i< parent.getChildCount(); i++)
+                            parent.getChildAt(i).setBackgroundColor(Color.WHITE);
+
+                             view.setBackgroundColor(Color.RED);
                     }
                 });
 

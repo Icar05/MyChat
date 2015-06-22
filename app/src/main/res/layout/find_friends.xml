@@ -19,6 +19,7 @@
         android:layout_height="100dp"
         android:divider="@color/blackdivider"
         android:dividerHeight="@dimen/twodp"
+        android:layout_marginRight="10dp"
         android:id="@+id/lv_Add_friends">
     </ListView>
 
@@ -42,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Назад"
+        android:layout_marginRight="10dp"
         android:onClick="onClick_F"
         android:id="@+id/btn_Home" />
 

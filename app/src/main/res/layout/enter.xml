@@ -128,7 +128,7 @@
                 android:layout_weight="1"
                 android:text="Добавить"
                 android:onClick="onClick"
-                android:id="@+id/find_user3" />
+                android:id="@+id/Add" />
 
         </LinearLayout>
 

@@ -3,6 +3,7 @@ package com.example.pinguin_linuxoid.mychat;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,7 +22,7 @@ public class Enter extends Activity{
     final String NAME = "name";
     final String PARSER = "`";
 
-    TextView label, tvNotif, tempView;
+    TextView label, tvNotif, tempView, test;
 
     ListView lv_contacts;
     ListView lv_messages;
@@ -47,6 +48,7 @@ public class Enter extends Activity{
 
         username =getIntent().getStringExtra(NAME);
 
+
         tvNotif = (TextView)findViewById(R.id.tvNotif);
         tempView = (TextView)findViewById(R.id.tempView);
         label = (TextView)findViewById(R.id.Label);      /// Приветствие поциента
@@ -58,8 +60,6 @@ public class Enter extends Activity{
         mBox = (EditText) findViewById(R.id.MesBox);
 
         lv_contacts = (ListView) findViewById(R.id.Contacts);
-
-
 
         data = "notification" + PARSER + username + PARSER + "@";
         sd = new Send_data(data);
@@ -101,7 +101,7 @@ public class Enter extends Activity{
         {
 
 
-            case R.id.find_user3:        Intent intent = new Intent(this, Find_friends.class);
+            case R.id.Add:        Intent intent = new Intent(this, Find_friends.class);
                                          intent.putExtra(NAME, username);
                                          startActivityForResult(intent, 1);
                                          break;
@@ -153,19 +153,36 @@ public class Enter extends Activity{
 
 
         try {
+
+
             temp2 = sd.get().toString();
-            contact = temp2.split(PARSER);
+            if(temp2.equals("Unknown host") || temp2.equals("No connecting to internet! "))
+            {
+                tempView.setText(temp2);
+                tempView.setTextColor(Color.RED);
+            }
 
-            aC = new ArrayAdapter<String>(this, R.layout.test, contact);
-            lv_contacts.setAdapter(aC);
-            lv_contacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            else {
+                contact = temp2.split(PARSER);
 
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    reciever = contact[position];// имя вибраного
-                    tempView.setText("Выбран "+reciever);
-                }
-            });
+                aC = new ArrayAdapter<String>(this, R.layout.test, contact);
+                lv_contacts.setAdapter(aC);
+                lv_contacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        reciever = contact[position];// имя вибраного
+
+                        for(int i = 0; i< parent.getChildCount(); i++)
+                            parent.getChildAt(i).setBackgroundColor(Color.WHITE);
+
+                            view.setBackgroundColor(Color.RED);
+
+
+
+                    }
+                });
+            }
 
         } catch (InterruptedException e) {
             e.fillInStackTrace();

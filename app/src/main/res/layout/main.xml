@@ -7,7 +7,8 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Pandatext"
+        android:text="This is nice panda skype!"
+        android:textColor="#00FF00"
         android:textSize="20dp"
         android:gravity="center"
         android:id="@+id/Panda" />
@@ -96,6 +97,8 @@
             android:text=""
             android:gravity="center"
             android:id="@+id/request" />
+
+
     </LinearLayout>
 
 </LinearLayout>
