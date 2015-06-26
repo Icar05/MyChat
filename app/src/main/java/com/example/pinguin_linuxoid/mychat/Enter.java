@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -21,7 +22,7 @@ public class Enter extends Activity{
     final String NAME = "name";
     final String PARSER = "`";
 
-    TextView label, tvNotif, tempView, test;
+    TextView label, tvNotif, tempView;
 
     ListView lv_contacts;
     ListView lv_messages;
@@ -86,7 +87,7 @@ public class Enter extends Activity{
             sd.isCancelled();
         }
 
-        Update_Adaptor();
+        Update_Adaptor("get_Friends");
     }
 
 
@@ -129,7 +130,7 @@ public class Enter extends Activity{
                                          sd = new Send_data(data);
                                          sd.execute();
                                          LL.setVisibility(View.INVISIBLE);
-                                         Update_Adaptor();
+                                         Update_Adaptor("get_Friends");
 
                                          break;
 
@@ -149,18 +150,34 @@ public class Enter extends Activity{
                                           sd = new Send_data(data);
                                           sd.execute();
 
-                                          Update_Adaptor();
+                                          Update_Adaptor("get_Friends");
                                           break;
 
-            default:                      break;
+            case R.id.Exit :               data = "exit" + PARSER + username + PARSER + "@";
+                                           sd = new Send_data(data);
+                                           sd.execute();
+
+                                           Intent home_intent = new Intent(this, MainActivity.class);
+                                           startActivity(home_intent);
+                                           break;
+
+            case R.id.chkOnline:           if(((CheckBox) v).isChecked())
+                                               Update_Adaptor("get_online_friends");
+
+                                           else
+                                               Update_Adaptor("get_Friends");
+
+                                            break;
+
+            default:                        break;
         }
     }
 
 
-    public void Update_Adaptor()
+    public void Update_Adaptor(String query)
     {
         temp2 = null;
-        data = "get_Friends" + PARSER + username + PARSER + "@";
+        data = query+ PARSER + username + PARSER + "@";
         sd = new Send_data(data);
         sd.execute();
 
@@ -178,7 +195,7 @@ public class Enter extends Activity{
             else {
                 contact = temp2.split(PARSER);
 
-                aC = new ArrayAdapter<String>(this, R.layout.test, contact);
+                aC = new ArrayAdapter<String>(this, R.layout.contacts_adaptor, contact);
                 lv_contacts.setAdapter(aC);
                 lv_contacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -219,7 +236,7 @@ public class Enter extends Activity{
 
 
             temp3 = sd.get().toString();
-            if(temp3.equals("Unknown host") || temp3.equals("No connecting to internet! "))
+            if(temp3.equals("Unknown host") || temp3.equals("No connecting to internet! ") || temp3.equals(""))
             {
                 tempView.setText(temp3);
                 tempView.setTextColor(Color.RED);
@@ -228,7 +245,7 @@ public class Enter extends Activity{
             else {
                 message = temp3.split(PARSER);
 
-                myAdapter = new MyAdapter(this, message);
+                myAdapter = new MyAdapter(this, message, username);
                 lv_messages.setAdapter(myAdapter);
                 lv_messages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
