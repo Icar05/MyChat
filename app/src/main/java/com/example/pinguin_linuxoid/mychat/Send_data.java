@@ -17,7 +17,7 @@ public  class Send_data extends AsyncTask<Void, Void, String> {
     DataOutputStream out;
     TextView view = null;
 
-
+//
     public Send_data(String _input, TextView _view) {
         input = _input;
         view = _view;

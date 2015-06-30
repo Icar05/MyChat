@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
             return;
         }
 
-
+//
         switch (view.getId())
         {
             case R.id.Enter :             PB.setVisibility(View.VISIBLE);
