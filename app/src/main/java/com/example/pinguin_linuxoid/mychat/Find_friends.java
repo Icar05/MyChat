@@ -93,7 +93,7 @@ public class Find_friends extends Activity {
 
     }
 
-//
+
     public void onClick_F(View v) {
         switch (v.getId())
         {
