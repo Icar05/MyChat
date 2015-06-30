@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/MyFoto"
             android:layout_weight="1"
-            android:src="@drawable/test">
+            android:src="@drawable/awa">
 
         </ImageView>
 
@@ -103,6 +103,13 @@
                 android:textColor="#00ff00"
                 android:id="@+id/ContactTv" />
 
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="online"
+                android:onClick="onClick"
+                android:id="@+id/chkOnline" />
+
             <ListView
                 android:layout_width="wrap_content"
                 android:layout_height="100dp"
@@ -142,7 +149,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="100dp"
                 android:layout_marginRight="10dp"
-                android:background="#ff0fa922"
+                android:background="#ffffff"
                 android:id="@+id/Messages">
             </ListView>
 
@@ -169,5 +176,12 @@
 
         </LinearLayout>
     </LinearLayout>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Exit"
+        android:onClick="onClick"
+        android:id="@+id/Exit" />
 
 </LinearLayout>

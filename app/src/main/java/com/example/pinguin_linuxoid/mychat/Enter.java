@@ -45,7 +45,7 @@ public class Enter extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.enter);
-
+        //done))
 
         username =getIntent().getStringExtra(NAME);
 
@@ -159,6 +159,8 @@ public class Enter extends Activity{
 
                                            Intent home_intent = new Intent(this, MainActivity.class);
                                            startActivity(home_intent);
+
+
                                            break;
 
             case R.id.chkOnline:           if(((CheckBox) v).isChecked())

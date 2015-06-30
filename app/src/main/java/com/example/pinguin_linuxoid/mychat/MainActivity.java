@@ -2,13 +2,11 @@ package com.example.pinguin_linuxoid.mychat;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import java.util.concurrent.ExecutionException;
 
 
@@ -19,6 +17,7 @@ public class MainActivity extends Activity {
     String name, passwd, data;
     final String PARSER = "`";
     Send_data sd;
+    ProgressBar PB;
 
 
 
@@ -31,6 +30,8 @@ public class MainActivity extends Activity {
         request = (TextView)findViewById(R.id.request);
         getName = (EditText)findViewById(R.id.getName);
         getPass = (EditText)findViewById(R.id.getPass);
+        PB = (ProgressBar)findViewById(R.id.PB);
+        PB.setVisibility(View.INVISIBLE);
     }
 
 
@@ -45,14 +46,15 @@ public class MainActivity extends Activity {
         passwd = getPass.getText().toString();
         if(name.isEmpty() || passwd.isEmpty())
         {
-            Toast.makeText(this, "Заполните все поля!", Toast.LENGTH_SHORT).show();
+            request.setText("Заполните все поля!");
             return;
         }
 
 
         switch (view.getId())
         {
-            case R.id.Enter :             data = "enter"+PARSER+name+PARSER+passwd;
+            case R.id.Enter :             PB.setVisibility(View.VISIBLE);
+                                          data = "enter"+PARSER+name+PARSER+passwd;
                                           sd = new Send_data(data, request);
                                           sd.execute();
 

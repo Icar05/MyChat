@@ -36,6 +36,7 @@ public class Find_friends extends Activity {
 
         title_result = (TextView) findViewById(R.id.title_Add_friends_result);
         pb = (ProgressBar) findViewById(R.id.progressBar);
+        pb.setVisibility(View.INVISIBLE);
         lv_Add_friends = (ListView) findViewById(R.id.lv_Add_friends);
         btn_Add = (Button)findViewById(R.id.btn_Add_friends);
         btn_Home = (Button)findViewById(R.id.btn_Home);
@@ -87,7 +88,6 @@ public class Find_friends extends Activity {
            e.fillInStackTrace();
         } finally {
             sd.isCancelled();
-            pb.setVisibility(View.GONE);
         }
 
 
@@ -102,9 +102,9 @@ public class Find_friends extends Activity {
                                                      title_result.setText("Сначала выберите пользователя из списка!");
 
                                                 else {
-                                                   data = "add_Friend" + PARSER + username + PARSER + friend + PARSER;
-                                                   sd = new Send_data(data);
-                                                    sd.execute();
+                                                     data = "add_Friend" + PARSER + username + PARSER + friend + PARSER;
+                                                     sd = new Send_data(data);
+                                                     sd.execute();
 
                                                    try {
                                                            temp = sd.get().toString();
@@ -121,7 +121,8 @@ public class Find_friends extends Activity {
                                                   break;
 
 
-            case R.id.btn_Home        :           Intent intent = new Intent();
+            case R.id.btn_Home        :           pb.setVisibility(View.VISIBLE);
+                                                  Intent intent = new Intent();
                                                   setResult(RESULT_OK, intent);
                                                   finish();
 
